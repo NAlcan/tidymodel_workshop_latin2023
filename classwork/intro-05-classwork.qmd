@@ -25,6 +25,7 @@ taxi_folds <- vfold_cv(taxi_train, v = 10, strata = tip)
 
 ## Tag parameters for tuning
 
+see dials package for tune function
 ```{r}
 rf_spec <- rand_forest(min_n = tune()) %>% 
   set_mode("classification")
@@ -71,5 +72,27 @@ Use grid search to find the best parameter(s).
 
 ```{r}
 # Your code here!
+rf_spec2 <- rand_forest(min_n = tune(), mtry = tune()) %>% 
+  set_mode("classification")
+
+rf_wflow2 <- workflow(tip ~ ., rf_spec2)
+rf_wflow2
+
+set.seed(22)
+rf_res2 <- tune_grid(
+  rf_wflow2,
+  taxi_folds,
+  grid = 5
+)
+
+show_best(rf_res2)
+
+best_parameter2 <- select_best(rf_res2)
+best_parameter2
+rf_wflow2 <- finalize_workflow(rf_wflow2, best_parameter2)
+
+final_fit2 <- last_fit(rf_wflow2, taxi_split) 
+
+collect_metrics(final_fit2)
 
 ```

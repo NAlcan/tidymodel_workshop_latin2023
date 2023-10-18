@@ -24,7 +24,7 @@ When is a good time to split your data?
 ```{r}
 set.seed(123)
 
-taxi_split <- initial_split(taxi)
+taxi_split <-initial_split(taxi)
 taxi_split
 ```
 
@@ -52,6 +52,13 @@ Hint: Which argument in `initial_split()` handles the proportion split into trai
 
 ```{r}
 # Your code here!
+set.seed(7)
+
+taxi_split2 <-initial_split(taxi,strata = tip)
+taxi_split2
+
+taxi_train2 <- training(taxi_split2)
+taxi_test2 <- testing(taxi_split2)
 
 ```
 
@@ -65,10 +72,44 @@ Explore the `taxi_train` data on your own!
 
 ```{r}
 # Your code here!
+library(tidyverse)
+
+table(taxi_train$tip) / sum(table(taxi_train$tip))
+
+taxi_train %>% 
+ggplot(aes(x = tip)) +
+  geom_bar()
+
+taxi_train %>% 
+ggplot(aes(x = tip, fill = local)) +
+  geom_bar()
+
+
+
+GGally::ggpairs(taxi_train, ggplot2::aes(colour=tip))
+
+
+
+## Con la variable Balanceada por strata
+
+table(taxi_train2$tip) / sum(table(taxi_train$tip))
+
+taxi_train2 %>% 
+ggplot(aes(x = tip)) +
+  geom_bar()
+
+
+GGally::ggpairs(taxi_train2, ggplot2::aes(colour=tip))
+
+
 
 ```
 
 ## Stratification
+
+
+Estratificación mantienen las proprociones dentro de cada nivel de la variable `strata`
+
 
 ```{r}
 set.seed(123)
